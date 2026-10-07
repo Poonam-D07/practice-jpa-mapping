@@ -34,13 +34,29 @@ public class PatientServiceImpl implements PatientService{
         PatientEntity savePatient = patientRepository.save(patient);
 
         // Step 4: Slip (response) banao aur wapas do
-       return PatientResponseDto.builder()
-               .id(savePatient.getId())
-               .name(savePatient.getName())
-               .age(savePatient.getAge())
-               .bloodGroup(savePatient.getMedicalRecord().getBloodGroup())
-               .diagnosis(savePatient.getMedicalRecord().getDiagnosis())
-               .build();
-
+       return mapToResponseDto(patient);
     }
+
+    //==============================
+    //   Read Patients By Id
+    //==============================
+    @Override
+    public PatientResponseDto getPatientById(Long id) {
+        PatientEntity patient = patientRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Patient not found with id : " + id));
+
+       return mapToResponseDto(patient);
+    }
+
+
+    // Entity ko Response DTO me badalne wala helper (dono methods use karenge)
+     private  PatientResponseDto mapToResponseDto(PatientEntity patient){
+        return PatientResponseDto.builder()
+                .id(patient.getId())
+                .name(patient.getName())
+                .age(patient.getAge())
+                .bloodGroup(patient.getMedicalRecord().getBloodGroup())
+                .diagnosis(patient.getMedicalRecord().getDiagnosis())
+                .build();
+     }
 }
