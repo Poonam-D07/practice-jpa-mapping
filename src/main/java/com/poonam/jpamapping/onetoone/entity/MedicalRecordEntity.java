@@ -18,4 +18,8 @@ public class MedicalRecordEntity {
 
     private String bloodGroup;
     private String diagnosis;
+
+    // INVERSE SIDE (foreign key yahan nahi, Patient ki table me hai)
+    @OneToOne(mappedBy = "medicalRecord")
+    private PatientEntity patientEntity;
 }
