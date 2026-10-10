@@ -7,4 +7,6 @@ import com.poonam.jpamapping.onetomany.dto.DoctorResponseDto;
 public interface DoctorService  {
     DoctorResponseDto createDoctor(DoctorRequestDto requestDto);
     DoctorDetailResponseDto getDoctorById(Long id);
+    String addSpecializationToDoctor(Long doctorId, Long specializationId);
+
 }

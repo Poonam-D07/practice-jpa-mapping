@@ -1,4 +1,7 @@
 package com.poonam.jpamapping.manytomany.repository;
 
-public interface SpecializationRepository {
+import com.poonam.jpamapping.manytomany.entity.SpecializationEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface SpecializationRepository extends JpaRepository<SpecializationEntity, Long> {
 }

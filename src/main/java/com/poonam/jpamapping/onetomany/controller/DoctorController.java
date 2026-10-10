@@ -27,4 +27,10 @@ public class DoctorController {
         DoctorDetailResponseDto response = doctorService.getDoctorById(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PostMapping("/{doctorId}/specializations/{specializationId}")
+    public ResponseEntity<String> addSpecialization(@PathVariable Long doctorId, @PathVariable Long specializationId){
+        String response = doctorService.addSpecializationToDoctor(doctorId, specializationId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

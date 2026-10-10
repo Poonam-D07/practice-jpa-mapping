@@ -1,5 +1,6 @@
 package com.poonam.jpamapping.onetomany.dto;
 
+import com.poonam.jpamapping.manytomany.dto.SpecializationResponseDto;
 import lombok.*;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public class DoctorDetailResponseDto {
     private String name;
     private Integer experience;
     private List<AppointmentResponseDto> appointments;
+
+    private List<SpecializationResponseDto> specializations;
 }
