@@ -1,5 +1,6 @@
 package com.poonam.jpamapping.onetomany.service;
 
+import com.poonam.jpamapping.common.PageResponseDto;
 import com.poonam.jpamapping.exception.ResourceNotFoundException;
 import com.poonam.jpamapping.manytomany.dto.SpecializationResponseDto;
 import com.poonam.jpamapping.manytomany.entity.SpecializationEntity;
@@ -12,6 +13,10 @@ import com.poonam.jpamapping.onetomany.entity.AppointmentEntity;
 import com.poonam.jpamapping.onetomany.entity.DoctorEntity;
 import com.poonam.jpamapping.onetomany.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,4 +112,96 @@ public class DoctorServiceImpl implements DoctorService{
 
         return "Specialization added to doctor successfully";
     }
+
+
+    //===========================
+    // GET ALL DOCTORS
+    //===========================
+    @Override
+    public List<DoctorResponseDto> getAllDoctors() {
+        // Step 1: DB se saare doctors nikalo
+        List<DoctorEntity> doctors = doctorRepository.findAll();
+
+        // Step 2: Har doctor ki slip banao aur list me daalo
+        List<DoctorResponseDto> doctorDtos = new ArrayList<>();
+         for(DoctorEntity doctor : doctors){
+          DoctorResponseDto dto = DoctorResponseDto.builder()
+                  .id(doctor.getId())
+                  .name(doctor.getName())
+                  .experience(doctor.getExperience())
+                  .build();
+          doctorDtos.add(dto);
+         }
+        return doctorDtos;
+    }
+
+    @Override
+    public PageResponseDto<DoctorResponseDto> getAllDoctorsPaged(int page, int size,String sortBy, String direction) {
+// Step 1: Sort ka tareeka batao (asc ya desc)
+       Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        // Step 2: Page, size aur sort teeno ek saath do
+        Pageable pageable = PageRequest.of(page, size,  sort);
+
+        // Step 3: DB se sirf wahi page nikalo
+        Page<DoctorEntity> doctorPage = doctorRepository.findAll(pageable);
+
+        // Step 4: Is page ke doctors ki slips banao
+        List<DoctorResponseDto> doctorDtos = new ArrayList<>();
+        for (DoctorEntity doctor : doctorPage.getContent()) {
+            DoctorResponseDto dto = DoctorResponseDto.builder()
+                    .id(doctor.getId())
+                    .name(doctor.getName())
+                    .experience(doctor.getExperience())
+                    .build();
+            doctorDtos.add(dto);
+        }
+
+        // Step 5: Page ki jaankari ke saath wapas do
+        return PageResponseDto.<DoctorResponseDto>builder()
+                .content(doctorDtos)
+                .pageNumber(doctorPage.getNumber())
+                .pageSize(doctorPage.getSize())
+                .totalElements(doctorPage.getTotalElements())
+                .totalPages(doctorPage.getTotalPages())
+                .last(doctorPage.isLast())
+                .build();
+    }
+
+    //========================================
+    //      SEARCH DOCTORS BY NAME
+    //========================================
+    @Override
+    public PageResponseDto<DoctorResponseDto> searchDoctorsByName(String name, int page, int size) {
+        // Step 1: Page aur size batao
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Step 2: DB se naam se dhundo
+        Page<DoctorEntity> doctorPage = doctorRepository.findByNameContainingIgnoreCase(name, pageable);
+
+        // Step 3: Is page ke doctors ki slips banao
+        List<DoctorResponseDto> doctorDtos = new ArrayList<>();
+        for (DoctorEntity doctor : doctorPage.getContent()) {
+            DoctorResponseDto dto = DoctorResponseDto.builder()
+                    .id(doctor.getId())
+                    .name(doctor.getName())
+                    .experience(doctor.getExperience())
+                    .build();
+            doctorDtos.add(dto);
+        }
+
+        // Step 4: Page ki jaankari ke saath wapas do
+          return PageResponseDto.<DoctorResponseDto>builder()
+                  .content(doctorDtos)
+                  .pageNumber(doctorPage.getNumber())
+                  .pageSize(doctorPage.getSize())
+                  .totalElements(doctorPage.getTotalElements())
+                  .totalPages(doctorPage.getTotalPages())
+                  .last(doctorPage.isLast())
+                  .build();
+
+    }
 }
+
