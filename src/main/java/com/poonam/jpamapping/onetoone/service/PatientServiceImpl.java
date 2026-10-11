@@ -1,5 +1,6 @@
 package com.poonam.jpamapping.onetoone.service;
 
+import com.poonam.jpamapping.exception.ResourceNotFoundException;
 import com.poonam.jpamapping.onetoone.dto.PatientRequestDto;
 import com.poonam.jpamapping.onetoone.dto.PatientResponseDto;
 import com.poonam.jpamapping.onetoone.entity.MedicalRecordEntity;
@@ -43,7 +44,7 @@ public class PatientServiceImpl implements PatientService{
     @Override
     public PatientResponseDto getPatientById(Long id) {
         PatientEntity patient = patientRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Patient not found with id : " + id));
+                .orElseThrow(()-> new ResourceNotFoundException("Patient not found with id : " + id));
 
        return mapToResponseDto(patient);
     }

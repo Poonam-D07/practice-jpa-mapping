@@ -1,5 +1,7 @@
 package com.poonam.jpamapping.onetomany.service;
 
+import com.poonam.jpamapping.exception.DuplicateResourceException;
+import com.poonam.jpamapping.exception.ResourceNotFoundException;
 import com.poonam.jpamapping.onetomany.dto.AppointmentRequestDto;
 import com.poonam.jpamapping.onetomany.dto.AppointmentResponseDto;
 import com.poonam.jpamapping.onetomany.entity.AppointmentEntity;
@@ -20,8 +22,14 @@ public class AppointmentServiceImp implements AppointmentService {
     public AppointmentResponseDto createAppointment(Long doctorId, AppointmentRequestDto requestDto) {
 
 // Step 1: Doctor ko DB se nikalo
-           DoctorEntity doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(() -> new RuntimeException("Doctor not found with id: " + doctorId));
+        DoctorEntity doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found with id: " + doctorId));
+
+
+        boolean slotTaken = appointmentRepository.existsByDoctorIdAndAppointmentTime(doctorId, requestDto.getAppointmentTime());
+        if (slotTaken) {
+            throw new DuplicateResourceException("Doctor already has an appointment at this time");
+        }
 
         AppointmentEntity appointment = AppointmentEntity.builder()
                 .appointmentTime(requestDto.getAppointmentTime())

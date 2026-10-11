@@ -1,5 +1,6 @@
 package com.poonam.jpamapping.onetomany.service;
 
+import com.poonam.jpamapping.exception.ResourceNotFoundException;
 import com.poonam.jpamapping.manytomany.dto.SpecializationResponseDto;
 import com.poonam.jpamapping.manytomany.entity.SpecializationEntity;
 import com.poonam.jpamapping.manytomany.repository.SpecializationRepository;
@@ -49,7 +50,7 @@ public class DoctorServiceImpl implements DoctorService{
     @Override
     public DoctorDetailResponseDto getDoctorById(Long id) {
         DoctorEntity doctor = doctorRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Doctor Not Found with id : " + id));
+                .orElseThrow(()->new ResourceNotFoundException("Doctor Not Found with id : " + id));
 
         // Step 2: Appointments ki slips (DTO) ki khali list banao
         List<AppointmentResponseDto> appointmentDtos = new ArrayList<>();
@@ -92,7 +93,7 @@ public class DoctorServiceImpl implements DoctorService{
     public String addSpecializationToDoctor(Long doctorId, Long specializationId) {
         // Step 1: Doctor ki file nikalo
         DoctorEntity doctor = doctorRepository.findById(doctorId)
-                .orElseThrow(()->new RuntimeException("Doctor not found with id : " + doctorId));
+                .orElseThrow(()->new ResourceNotFoundException("Doctor not found with id : " + doctorId));
 
         // Step 2: Specialization ki file nikalo
         SpecializationEntity specialization = specializationRepository.findById (specializationId)

@@ -1,5 +1,6 @@
 package com.poonam.jpamapping.manytomany.service;
 
+import com.poonam.jpamapping.exception.ResourceNotFoundException;
 import com.poonam.jpamapping.manytomany.dto.SpecializationDetailResponseDto;
 import com.poonam.jpamapping.manytomany.dto.SpecializationRequestDto;
 import com.poonam.jpamapping.manytomany.dto.SpecializationResponseDto;
@@ -41,7 +42,7 @@ public class SpecializationServiceImpl implements SpecializationService{
     public SpecializationDetailResponseDto getSpecializationDetail(Long id) {
         // Step 1: Specialization ki file nikalo
         SpecializationEntity specialization = specializationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Specialization not found with id : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Specialization not found with id : " + id));
 
         // Step 2: Doctors ki slips ki khali list banao
         List<DoctorResponseDto> doctorDtos = new ArrayList<>();

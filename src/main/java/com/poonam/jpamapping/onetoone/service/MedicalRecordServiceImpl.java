@@ -1,5 +1,6 @@
 package com.poonam.jpamapping.onetoone.service;
 
+import com.poonam.jpamapping.exception.ResourceNotFoundException;
 import com.poonam.jpamapping.onetoone.dto.MedicalRecordResponseDto;
 import com.poonam.jpamapping.onetoone.entity.MedicalRecordEntity;
 import com.poonam.jpamapping.onetoone.repository.MedicalRecordRepository;
@@ -16,7 +17,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
     public MedicalRecordResponseDto getMedicalRecordById(Long id) {
 
         MedicalRecordEntity record = medicalRecordRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Medical record not found with id : " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Medical record not found with id : " + id));
 
         return MedicalRecordResponseDto.builder()
                 .id(record.getId())

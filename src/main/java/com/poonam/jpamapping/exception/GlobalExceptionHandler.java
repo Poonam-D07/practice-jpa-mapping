@@ -1,0 +1,53 @@
+package com.poonam.jpamapping.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler  {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", 404);
+        body.put("error", "Not Found");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex){
+        // Har galat field ka naam aur uska message yahan jama hoga
+           Map<String, String> fieldErrors = new HashMap<>();
+           for(FieldError error : ex.getBindingResult().getFieldErrors()){
+               fieldErrors.put(error.getField(), error.getDefaultMessage());
+           }
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", 400);
+           body.put("error", "Validation Failed");
+           body.put("errors", fieldErrors);
+
+           return  new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    public  ResponseEntity<Map<String, Object>> handleDuplicate(DuplicateResourceException ex){
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", 409);
+        body.put("error","Conflict");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+}
