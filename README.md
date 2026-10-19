@@ -18,7 +18,7 @@ Built to practice JPA/Hibernate relationships (One-to-One, One-to-Many, Many-to-
 
 | Area | Technology |
 |---|---|
-| Language | Java [your Java version] |
+| Language | Java 17 |
 | Framework | Spring Boot 4.1.1 |
 | Persistence | Spring Data JPA, Hibernate |
 | Database | MySQL |
@@ -91,7 +91,7 @@ Each module follows the same flow: `Controller -> Service -> Repository -> MySQL
 
 ### Prerequisites
 
-- Java [your Java version]
+- Java 17
 - Maven
 - MySQL
 
@@ -148,4 +148,4 @@ Each module follows the same flow: `Controller -> Service -> Repository -> MySQL
 ## Author
 
 POONAM 
-GitHub : https://github.com/Poonam-D07/practice-jpa-mapping
+GitHub : https://github.com/Poonam-D07 
